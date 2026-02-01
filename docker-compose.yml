@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto_broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  data_manager:
+    build: 
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: data_manager
+    volumes:
+      - ./src:/app
+    command: python /app/data_manager.py
+    depends_on:
+      - mosquitto
+    restart: always
+
+  sensors:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: sensor_emulator
+    volumes:
+      - ./src:/app
+    command: python /app/sensor_emulator.py
+    depends_on:
+      - mosquitto
+    restart: always
+
+networks:
+  default:
+    name: iot_security_network
