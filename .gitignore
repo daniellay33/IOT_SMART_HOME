@@ -1,0 +1,32 @@
+# ===== Python virtual environment =====
+.venv/
+venv/
+ENV/
+env/
+
+# ===== Python cache / compiled files =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ===== Logs =====
+*.log
+
+# ===== OS / Editor junk =====
+.DS_Store
+Thumbs.db
+
+# ===== IDEs =====
+.vscode/
+.idea/
+
+# ===== Docker =====
+*.pid
+
+# ===== Environment variables =====
+.env
+.env.*
+
+# ===== Tkinter / runtime artifacts =====
+*.lock

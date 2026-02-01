@@ -13,7 +13,7 @@ services:
   data_manager:
     build: 
       context: .
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./Dockerfile
     container_name: data_manager
     volumes:
       - ./src:/app
@@ -25,7 +25,7 @@ services:
   sensors:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./Dockerfile
     container_name: sensor_emulator
     volumes:
       - ./src:/app
