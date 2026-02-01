@@ -1,61 +1,124 @@
-Smart Home Security System - IoT Project
-A modular, event-driven IoT security system designed for smart home environments. This project utilizes a Microservices Architecture to monitor sensors, manage security states, and provide real-time alerts.
+# 🏠 Smart Home Security System
 
-🚀 Key Features
-Real-Time Intrusion Detection: Instant alerts from motion and door sensors via MQTT.
+A smart home security system simulator built with **Python**, **MQTT**, and **Docker**.  
+This project demonstrates an **event-driven IoT architecture** using the publish/subscribe messaging model.
 
-Remote Management: Toggle system security states (Armed/Disarmed) through a central dashboard.
+---
 
-Containerized Infrastructure: Entire stack (Broker, Logic, Database, Sensors) managed via Docker.
+## Overview
 
-Event Logging: Historical data of all security events stored for audit and monitoring.
+The system simulates a home security environment with virtual sensors, centralized decision logic, and a graphical user interface.
 
-🛠 Tech Stack
-Language: Python 3.x
+All components are **decoupled** and communicate **only through MQTT topics**, similar to real-world IoT systems.
 
-Communication: MQTT Protocol (Eclipse Paho)
+---
 
-Message Broker: Mosquitto MQTT
+## Architecture
 
-Orchestration: Docker & Docker Compose
+- **Sensor Emulator** publishes sensor events
+- **Data Manager** processes events and system state
+- **GUI Application** controls the system and displays alerts
+- **MQTT Broker (Mosquitto)** acts as the communication layer
 
-Database: SQLite / In-memory Log System
+**Runtime locations:**
+- Sensors, Data Manager, and MQTT Broker run in Docker containers
+- GUI Application runs on the host machine
 
-🏗 System Architecture
-The system consists of several independent services running in separate Docker containers:
+---
 
-MQTT Broker: The central hub for message distribution.
+## Components
 
-Sensor Emulator: Simulates physical door and motion sensors.
+### Sensor Emulator (`sensor_emulator.py`)
+- Runs inside a Docker container
+- Simulates motion and door sensors
+- Publishes sensor data to:
+home/security/sensors
 
-Data Manager (Core Logic): Processes incoming data and decides when to trigger alarms based on the system state.
 
-Dashboard/GUI: Provides a user interface for monitoring and control.
+---
 
-🚦 Getting Started
-Prerequisites
-Docker and Docker Compose installed on your machine.
+### Data Manager (`data_manager.py`)
+- Runs inside a Docker container
+- Acts as the system’s central logic
+- Subscribes to:
+- `home/security/sensors`
+- `home/security/control`
+- Maintains system state (ARM / DISARM)
+- Publishes alerts to:
+home/security/alerts
 
-Installation & Execution
-Clone the repository:
 
-Bash
-git clone https://github.com/your-username/smart-home-security.git
-cd smart-home-security
-Launch the entire system using Docker Compose:
+---
 
-Bash
-docker-compose up --build
-Access the logs to see the communication flow between sensors and the broker.
+### GUI Application (`gui_app.py`)
+- Runs on the host machine (outside Docker)
+- Built using Tkinter
+- Allows the user to:
+- Arm and disarm the security system
+- Receive real-time alerts
+- Connects to the MQTT broker via:
+localhost:1883
 
-📊 Work Flow
-The system follows an asynchronous event-driven flow:
 
-Sensor publishes state to home/security/sensors.
+---
 
-Data Manager subscribes to the topic and evaluates the logic.
+### MQTT Broker
+- Uses **Mosquitto**
+- Runs inside a Docker container
+- Exposed ports:
+- `1883` – MQTT
+- `9001` – MQTT over WebSockets
 
-If State == Armed and Sensor == Alert, an alarm command is published to home/security/alerts.
+---
 
-📜 License
-This project was developed as part of the IoT Software Development course at HIT.
+## MQTT Topics
+
+| Topic | Description |
+|------|------------|
+| `home/security/sensors` | Sensor data |
+| `home/security/control` | Control commands (ARM / DISARM) |
+| `home/security/alerts` | Security alerts |
+
+---
+
+## Getting Started
+
+### 1. Start backend services
+```bash
+docker compose up --build
+This starts:
+
+Mosquitto MQTT broker
+
+Sensor emulator
+
+Data manager
+
+2. Run the GUI application
+python gui_app.py
+⚠️ Ensure Docker is running and all containers are up before starting the GUI.
+
+Requirements
+Python 3.9+
+
+Docker & Docker Compose
+
+MQTT (Mosquitto)
+
+Python packages:
+
+paho-mqtt
+
+tkinter
+
+Key Concepts Demonstrated
+MQTT publish/subscribe messaging
+
+Event-driven architecture
+
+Service decoupling
+
+IoT system simulation
+
+Docker networking
+
