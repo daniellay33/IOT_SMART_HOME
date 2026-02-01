@@ -4,7 +4,7 @@ import paho.mqtt.client as mqtt
 import json
 import threading
 
-MQTT_BROKER = "mosquitto" 
+MQTT_BROKER = "localhost" 
 MQTT_PORT = 1883
 TOPIC_CONTROL = "home/security/control"
 TOPIC_ALERTS = "home/security/alerts"
